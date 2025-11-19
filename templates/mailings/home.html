@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h1>Сервис управления рассылками</h1>
+<p class="text-muted">Это главная страница нашего проекта.</p>
+
+<ul>
+  <li>Всего рассылок: {{ mailings_total }}</li>
+  <li>Активных рассылок: {{ mailings_active }}</li>
+  <li>Уникальных получателей: {{ clients_unique }}</li>
+</ul>
+
+<p>Позже эти цифры будут считаться по реальным данным из базы.</p>
+{% endblock %}
