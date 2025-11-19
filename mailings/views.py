@@ -3,7 +3,10 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from .models import Client, Message, Mailing #, Attempt пока его нет, позже создам
+from .models import Client, Message, Mailing  # Attempt
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .services import send_mailing
 
 
 class HomeView(TemplateView):
@@ -11,10 +14,10 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # пока заглушки, чтобы не падало:
-        context['mailings_total'] = 0
-        context['mailings_active'] = 0
-        context['clients_unique'] = 0
+        # чтобы не падало можно временно поставить "значения = 0":
+        context['mailings_total'] = Mailing.objects.count()
+        context['mailings_active'] = Mailing.objects.filter(status=Mailing.STATUS_STARTED).count()
+        context['clients_unique'] = Client.objects.count()
         return context
 
 
@@ -118,3 +121,18 @@ class MailingDeleteView(DeleteView):
     model = Mailing
     template_name = 'mailings/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailings:mailing_list')
+
+
+def send_mailing_view(request, pk):
+    """
+    Запуск отправки рассылки по кнопке на странице.
+    """
+    mailing = get_object_or_404(Mailing, pk=pk)
+
+    if request.method == 'POST':
+        send_mailing(mailing)
+        messages.success(request, 'Рассылка отправлена, попытки зафиксированы.')
+        return redirect('mailings:mailing_detail', pk=pk)
+
+    # Если вдруг зайдут GET-запросом - просто вернёмся на детали.
+    return redirect('mailings:mailing_detail', pk=pk)
