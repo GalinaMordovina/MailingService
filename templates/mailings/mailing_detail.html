@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Рассылка{% endblock %}
+
+{% block content %}
+<h2>Рассылка #{{ mailing.id }}</h2>
+
+<p><strong>Начало:</strong> {{ mailing.start_datetime }}</p>
+<p><strong>Окончание:</strong> {{ mailing.end_datetime }}</p>
+<p><strong>Статус:</strong> {{ mailing.get_status_display }}</p>
+<p><strong>Сообщение:</strong> {{ mailing.message.subject }}</p>
+
+<p><strong>Получатели:</strong></p>
+<ul>
+  {% for client in mailing.clients.all %}
+    <li>{{ client.full_name }} ({{ client.email }})</li>
+  {% empty %}
+    <li>Нет получателей</li>
+  {% endfor %}
+</ul>
+
+<a class="btn btn-warning" href="{% url 'mailings:mailing_update' mailing.id %}">Изменить</a>
+<a class="btn btn-danger" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
+<a class="btn btn-secondary" href="{% url 'mailings:mailing_list' %}">Назад</a>
+{% endblock %}

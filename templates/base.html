@@ -11,9 +11,9 @@
   <div class="container">
     <a class="navbar-brand" href="{% url 'home' %}">Рассылки</a>
     <div>
-      <a class="nav-link d-inline text-light" href="#">Клиенты</a>
-      <a class="nav-link d-inline text-light" href="#">Сообщения</a>
-      <a class="nav-link d-inline text-light" href="#">Рассылки</a>
+      <a class="nav-link d-inline text-light" href="{% url 'mailings:client_list' %}">Клиенты</a>
+      <a class="nav-link d-inline text-light" href="{% url 'mailings:message_list' %}">Сообщения</a>
+      <a class="nav-link d-inline text-light" href="{% url 'mailings:mailing_list' %}">Рассылки</a>
     </div>
   </div>
 </nav>
