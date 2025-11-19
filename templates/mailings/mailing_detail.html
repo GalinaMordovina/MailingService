@@ -18,7 +18,31 @@
   {% endfor %}
 </ul>
 
-<a class="btn btn-warning" href="{% url 'mailings:mailing_update' mailing.id %}">Изменить</a>
-<a class="btn btn-danger" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
-<a class="btn btn-secondary" href="{% url 'mailings:mailing_list' %}">Назад</a>
+<hr>
+
+<form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
+  {% csrf_token %}
+  <button class="btn btn-primary" type="submit">
+    Отправить рассылку сейчас
+  </button>
+</form>
+
+<hr>
+
+<h3>Попытки отправки</h3>
+<ul>
+  {% for attempt in mailing.attempts.all %}
+    <li>
+      {{ attempt.created_at }} —
+      {{ attempt.get_status_display }} —
+      {{ attempt.server_response|default:"(нет ответа)" }}
+    </li>
+  {% empty %}
+    <li>Попыток пока не было.</li>
+  {% endfor %}
+</ul>
+
+<a class="btn btn-warning mt-3" href="{% url 'mailings:mailing_update' mailing.id %}">Изменить</a>
+<a class="btn btn-danger mt-3" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
+<a class="btn btn-secondary mt-3" href="{% url 'mailings:mailing_list' %}">Назад</a>
 {% endblock %}
