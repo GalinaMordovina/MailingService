@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Клиенты{% endblock %}
+
+{% block content %}
+<h1>Клиенты</h1>
+
+<a class="btn btn-primary mb-3" href="{% url 'mailings:client_create' %}">Добавить клиента</a>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>ФИО</th>
+        <th></th>
+    </tr>
+    {% for client in clients %}
+    <tr>
+        <td>{{ client.id }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.full_name }}</td>
+        <td>
+            <a href="{% url 'mailings:client_detail' client.id %}">Подробнее</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
