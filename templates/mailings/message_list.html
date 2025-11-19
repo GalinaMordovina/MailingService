@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<h1>Сообщения</h1>
+
+<a class="btn btn-primary mb-3" href="{% url 'mailings:message_create' %}">
+    Добавить сообщение
+</a>
+
+<table class="table">
+  <tr>
+    <th>ID</th>
+    <th>Тема</th>
+    <th></th>
+  </tr>
+  {% for message in messages %}
+    <tr>
+      <td>{{ message.id }}</td>
+      <td>{{ message.subject }}</td>
+      <td>
+        <a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="3">Сообщений пока нет.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
