@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Client(models.Model):
@@ -16,12 +17,22 @@ class Client(models.Model):
         verbose_name='Комментарий'
     )
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='clients',
+        null=True,
+        blank=True,
+        verbose_name='Владелец',
+    )
+
     def __str__(self):
         return f'{self.full_name} <{self.email}>'
 
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+        # права для менеджеров добавлю позже сюда через permissions = [...]
 
 
 class Message(models.Model):
@@ -34,12 +45,22 @@ class Message(models.Model):
         verbose_name='Тело письма'
     )
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='messages',
+        null=True,
+        blank=True,
+        verbose_name='Владелец',
+    )
+
     def __str__(self):
         return self.subject
 
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+        # сюда позже тоже добавлю кастомные права
 
 
 class Mailing(models.Model):
@@ -79,12 +100,22 @@ class Mailing(models.Model):
         verbose_name='Получатели'
     )
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='mailings',
+        null=True,
+        blank=True,
+        verbose_name='Владелец',
+    )
+
     def __str__(self):
         return f'Рассылка #{self.pk} ({self.get_status_display()})'
 
     class Meta:
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
+        # сюда тоже позже добавлю права для менеджеров
 
 
 class Attempt(models.Model):

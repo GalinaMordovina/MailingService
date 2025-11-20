@@ -2,11 +2,12 @@
 {% block title %}Рассылка{% endblock %}
 
 {% block content %}
-<h2>Рассылка #{{ mailing.id }}</h2>
+<h1>Рассылка #{{ mailing.id }}</h1>
 
 <p><strong>Начало:</strong> {{ mailing.start_datetime }}</p>
 <p><strong>Окончание:</strong> {{ mailing.end_datetime }}</p>
 <p><strong>Статус:</strong> {{ mailing.get_status_display }}</p>
+
 <p><strong>Сообщение:</strong> {{ mailing.message.subject }}</p>
 
 <p><strong>Получатели:</strong></p>
@@ -20,12 +21,28 @@
 
 <hr>
 
-<form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
-  {% csrf_token %}
-  <button class="btn btn-primary" type="submit">
-    Отправить рассылку сейчас
-  </button>
-</form>
+{% if mailing.owner == user %}
+    <!-- Кнопка отправки рассылки доступна только владельцу -->
+    <form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
+      {% csrf_token %}
+      <button class="btn btn-primary" type="submit">
+        Отправить рассылку сейчас
+      </button>
+    </form>
+
+    <br>
+
+    <a class="btn btn-warning" href="{% url 'mailings:mailing_update' mailing.id %}">
+        Изменить
+    </a>
+    <a class="btn btn-danger" href="{% url 'mailings:mailing_delete' mailing.id %}">
+        Удалить
+    </a>
+{% endif %}
+
+<a class="btn btn-secondary mt-2" href="{% url 'mailings:mailing_list' %}">
+    Назад к списку
+</a>
 
 <hr>
 
@@ -42,7 +59,4 @@
   {% endfor %}
 </ul>
 
-<a class="btn btn-warning mt-3" href="{% url 'mailings:mailing_update' mailing.id %}">Изменить</a>
-<a class="btn btn-danger mt-3" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
-<a class="btn btn-secondary mt-3" href="{% url 'mailings:mailing_list' %}">Назад</a>
 {% endblock %}

@@ -2,12 +2,23 @@
 {% block title %}Сообщение{% endblock %}
 
 {% block content %}
-<h2>{{ message.subject }}</h2>
+<h1>Сообщение</h1>
 
-<p><strong>Текст:</strong></p>
-<p>{{ message.body|linebreaksbr }}</p>
+<p><strong>ID:</strong> {{ message.id }}</p>
+<p><strong>Тема:</strong> {{ message.subject }}</p>
+<p><strong>Текст:</strong><br>{{ message.body }}</p>
 
-<a class="btn btn-warning" href="{% url 'mailings:message_update' message.id %}">Изменить</a>
-<a class="btn btn-danger" href="{% url 'mailings:message_delete' message.id %}">Удалить</a>
-<a class="btn btn-secondary" href="{% url 'mailings:message_list' %}">Назад</a>
+<hr>
+
+<a class="btn btn-secondary" href="{% url 'mailings:message_list' %}">Назад к списку</a>
+
+{% if message.owner == user %}
+    <a class="btn btn-primary" href="{% url 'mailings:message_update' message.pk %}">
+        Изменить
+    </a>
+    <a class="btn btn-danger" href="{% url 'mailings:message_delete' message.pk %}">
+        Удалить
+    </a>
+{% endif %}
+
 {% endblock %}
