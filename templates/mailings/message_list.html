@@ -21,7 +21,6 @@
       <td>{{ message.subject }}</td>
       <td>
         <a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a>
-
         {% if message.owner == user %}
             | <a href="{% url 'mailings:message_update' message.pk %}">Изменить</a>
             | <a href="{% url 'mailings:message_delete' message.pk %}">Удалить</a>

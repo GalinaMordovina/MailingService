@@ -140,3 +140,5 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home'  # Чтобы после логина меня кидало на главную
 LOGOUT_REDIRECT_URL = 'home'
+
+LOGIN_URL = 'users:login'

@@ -25,6 +25,9 @@ urlpatterns = [
     path('mailings/<int:pk>/update/', views.MailingUpdateView.as_view(), name='mailing_update'),
     path('mailings/<int:pk>/delete/', views.MailingDeleteView.as_view(), name='mailing_delete'),
 
+    # Попытки рассылок
+    path('attempts/', views.AttemptListView.as_view(), name='attempt_list'),
+
     # Отправка рассылки вручную
     path('mailings/<int:pk>/send/', views.send_mailing_view, name='mailing_send'),
 ]

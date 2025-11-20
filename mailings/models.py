@@ -32,7 +32,9 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
-        # права для менеджеров добавлю позже сюда через permissions = [...]
+        permissions = (
+            ('can_view_all_clients', 'Может просматривать всех клиентов'),
+        )
 
 
 class Message(models.Model):
@@ -60,7 +62,9 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
-        # сюда позже тоже добавлю кастомные права
+        permissions = (
+            ('can_view_all_messages', 'Может просматривать все сообщения'),
+        )
 
 
 class Mailing(models.Model):
@@ -115,7 +119,10 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
-        # сюда тоже позже добавлю права для менеджеров
+        permissions = (
+            ('can_view_all_mailings', 'Может просматривать все рассылки'),
+            ('can_disable_mailings', 'Может отключать рассылки'),
+        )
 
 
 class Attempt(models.Model):

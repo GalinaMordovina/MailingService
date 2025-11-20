@@ -3,12 +3,15 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from .models import Client, Message, Mailing  # Attempt
+from .models import Client, Message, Mailing, Attempt
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .services import send_mailing
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
+def is_manager(user):  # проверка роли пользователя
+    return user.is_authenticated and user.groups.filter(name='Менеджеры').exists()
 
 
 class HomeView(TemplateView):
@@ -31,13 +34,22 @@ class ClientListView(LoginRequiredMixin, ListView):
     context_object_name = 'clients'
 
     def get_queryset(self):
-        return Client.objects.filter(owner=self.request.user)
+        qs = Client.objects.all()
+        if is_manager(self.request.user):
+            return qs
+        return qs.filter(owner=self.request.user)
 
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'mailings/client_detail.html'
     context_object_name = 'client'
+
+    def get_queryset(self):
+        qs = Client.objects.all()
+        if is_manager(self.request.user):
+            return qs
+        return qs.filter(owner=self.request.user)
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -70,6 +82,12 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = 'mailings/message_list.html'
     context_object_name = 'messages'
+
+    def get_queryset(self):
+        qs = Message.objects.all()
+        if is_manager(self.request.user):
+            return qs
+        return qs.filter(owner=self.request.user)
 
 
 class MessageDetailView(LoginRequiredMixin, DetailView):
@@ -109,6 +127,12 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = 'mailings/mailing_list.html'
     context_object_name = 'mailings'
 
+    def get_queryset(self):
+        qs = Message.objects.all()
+        if is_manager(self.request.user):
+            return qs
+        return qs.filter(owner=self.request.user)
+
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
@@ -138,6 +162,18 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     template_name = 'mailings/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailings:mailing_list')
+
+
+# Попытки рассылок
+
+class AttemptListView(LoginRequiredMixin, ListView):
+    model = Attempt
+    template_name = 'mailings/attempt_list.html'
+    context_object_name = 'attempts'
+
+    def get_queryset(self):
+        # показываем попытки только по рассылкам текущего пользователя
+        return Attempt.objects.filter(mailing__owner=self.request.user).select_related('mailing')
 
 
 # Отправка рассылки
