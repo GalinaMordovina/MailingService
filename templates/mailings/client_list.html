@@ -15,17 +15,13 @@
         <th>ФИО</th>
         <th>Действия</th>
     </tr>
-
     {% for client in clients %}
     <tr>
         <td>{{ client.id }}</td>
         <td>{{ client.email }}</td>
         <td>{{ client.full_name }}</td>
-
         <td>
             <a href="{% url 'mailings:client_detail' client.id %}">Подробнее</a>
-
-            <!-- Кнопки управления доступны только владельцу -->
             {% if client.owner == user %}
                 | <a href="{% url 'mailings:client_update' client.pk %}">Редактировать</a>
                 | <a href="{% url 'mailings:client_delete' client.pk %}">Удалить</a>
@@ -33,6 +29,6 @@
         </td>
     </tr>
     {% endfor %}
-
 </table>
+
 {% endblock %}
