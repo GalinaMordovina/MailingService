@@ -5,7 +5,7 @@
 <h1>Рассылки</h1>
 
 <a class="btn btn-primary mb-3" href="{% url 'mailings:mailing_create' %}">
-  Добавить рассылку
+    Добавить рассылку
 </a>
 
 <table class="table">
@@ -14,8 +14,9 @@
     <th>Начало</th>
     <th>Окончание</th>
     <th>Статус</th>
-    <th></th>
+    <th>Действия</th>
   </tr>
+
   {% for mailing in mailings %}
     <tr>
       <td>{{ mailing.id }}</td>
@@ -24,10 +25,14 @@
       <td>{{ mailing.get_status_display }}</td>
       <td>
         <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a>
+
+        {% if mailing.owner == user %}
+            | <a href="{% url 'mailings:mailing_update' mailing.pk %}">Изменить</a>
+            | <a href="{% url 'mailings:mailing_delete' mailing.pk %}">Удалить</a>
+        {% endif %}
       </td>
     </tr>
-  {% empty %}
-    <tr><td colspan="5">Рассылок пока нет.</td></tr>
   {% endfor %}
 </table>
+
 {% endblock %}
