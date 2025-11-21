@@ -53,7 +53,8 @@ dist/
 *.egg-info/
 
 # Django specific
-media/
+media/*
+!media/.gitkeep
 staticfiles/
 *.mo
 # *.pot
@@ -63,5 +64,3 @@ staticfiles/
 
 # Local database
 db.sqlite3
-
-

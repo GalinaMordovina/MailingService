@@ -7,6 +7,7 @@
 <p><strong>Начало:</strong> {{ mailing.start_datetime }}</p>
 <p><strong>Окончание:</strong> {{ mailing.end_datetime }}</p>
 <p><strong>Статус:</strong> {{ mailing.get_status_display }}</p>
+<p><strong>Активна:</strong> {{ mailing.is_active|yesno:"Да,Нет" }}</p>
 
 <p><strong>Сообщение:</strong> {{ mailing.message.subject }}</p>
 
@@ -22,13 +23,20 @@
 <hr>
 
 {% if mailing.owner == user %}
-    <!-- Кнопка отправки рассылки доступна только владельцу -->
-    <form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
-      {% csrf_token %}
-      <button class="btn btn-primary" type="submit">
-        Отправить рассылку сейчас
-      </button>
-    </form>
+    {% if mailing.is_active %}
+        <!-- Кнопка отправки рассылки доступна только владельцу
+             и только если рассылка активна -->
+        <form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">
+            Отправить рассылку сейчас
+          </button>
+        </form>
+    {% else %}
+        <p class="text-muted">
+            Рассылка отключена. Чтобы отправить письма, включите её в настройках.
+        </p>
+    {% endif %}
 
     <br>
 

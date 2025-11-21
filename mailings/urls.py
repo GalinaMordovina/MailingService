@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.views.decorators.cache import cache_page, cache_control
-
+from .views import ReportsView
 
 app_name = 'mailings'
 
@@ -30,6 +30,9 @@ urlpatterns = [
 
     # Попытки рассылок (кэшируем список попыток на 2 минуты)
     path('attempts/', cache_page(60 * 2)(views.AttemptListView.as_view()), name='attempt_list'),
+
+    # Отчёты по рассылкам
+    path('reports/', ReportsView.as_view(), name='reports'),
 
     # Отправка рассылки вручную
     path('mailings/<int:pk>/send/', views.send_mailing_view, name='mailing_send'),
