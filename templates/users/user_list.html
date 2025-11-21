@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<h1>Пользователи сервиса</h1>
+
+<p class="text-muted">
+    Эта страница доступна только менеджерам. Здесь можно блокировать и разблокировать пользователей.
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Имя</th>
+            <th>Активен</th>
+            <th>Группы</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <td>{{ u.email }}</td>
+            <td>{{ u.get_full_name|default:"(нет имени)" }}</td>
+            <td>
+                {% if u.is_active %}
+                    <span class="text-success">Да</span>
+                {% else %}
+                    <span class="text-danger">Нет</span>
+                {% endif %}
+            </td>
+            <td>
+                {% for g in u.groups.all %}
+                    {{ g.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    (нет)
+                {% endfor %}
+            </td>
+            <td>
+                {% if u != user %}
+                    <form method="post" action="{% url 'users:user_toggle' u.pk %}" class="d-inline">
+                        {% csrf_token %}
+                        {% if u.is_active %}
+                            <button class="btn btn-sm btn-danger" type="submit">
+                                Заблокировать
+                            </button>
+                        {% else %}
+                            <button class="btn btn-sm btn-success" type="submit">
+                                Разблокировать
+                            </button>
+                        {% endif %}
+                    </form>
+                {% else %}
+                    <span class="text-muted">Это вы</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

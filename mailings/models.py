@@ -92,6 +92,11 @@ class Mailing(models.Model):
         default=STATUS_CREATED,
         verbose_name='Статус'
     )
+    # новый флаг: включена ли рассылка
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Активна'
+    )
     message = models.ForeignKey(
         Message,
         on_delete=models.CASCADE,

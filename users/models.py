@@ -7,7 +7,17 @@ class CustomUser(AbstractUser):
     Кастомная модель пользователя.
     Логин по email, добавлены аватар, телефон, страна.
     """
+    # делаем username НЕ уникальным и необязательным
+    username = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        unique=False,
+        verbose_name="Имя пользователя",
+    )
+
     email = models.EmailField(unique=True, verbose_name='Email')
+
     avatar = models.ImageField(
         upload_to='avatars/',
         blank=True,
@@ -26,11 +36,11 @@ class CustomUser(AbstractUser):
     )
 
     USERNAME_FIELD = 'email'          # используем email как логин
-    REQUIRED_FIELDS = ['username']    # что дополнительно спрашивать при createsuperuser
+    REQUIRED_FIELDS = []    # что дополнительно спрашивать при createsuperuser
 
     def __str__(self):
         return self.email
 
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+    # class Meta:
+    #   verbose_name = 'Пользователь'
+    #   verbose_name_plural = 'Пользователи'
