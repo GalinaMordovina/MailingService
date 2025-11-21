@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}Главная{% endblock %}
 
@@ -6,11 +7,13 @@
 <h1>Сервис управления рассылками</h1>
 <p class="text-muted">Это главная страница нашего проекта.</p>
 
+{% cache 300 home_stats %}
 <ul>
   <li>Всего рассылок: {{ mailings_total }}</li>
   <li>Активных рассылок: {{ mailings_active }}</li>
   <li>Уникальных получателей: {{ clients_unique }}</li>
 </ul>
+{% endcache %}
 
 <p>Позже эти цифры будут считаться по реальным данным из базы.</p>
 {% endblock %}
