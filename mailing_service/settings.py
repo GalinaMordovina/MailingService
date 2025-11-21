@@ -142,3 +142,11 @@ LOGIN_REDIRECT_URL = 'home'  # Чтобы после логина меня ки�
 LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_URL = 'users:login'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'mailing-service-cache',
+    }
+}

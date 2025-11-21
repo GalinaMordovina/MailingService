@@ -8,26 +8,19 @@
   <tr>
     <th>ID</th>
     <th>Рассылка</th>
-    <th>Дата и время</th>
     <th>Статус</th>
+    <th>Дата</th>
     <th>Ответ сервера</th>
   </tr>
 
   {% for attempt in attempts %}
-    <tr>
-      <td>{{ attempt.id }}</td>
-      <td>
-        Рассылка #{{ attempt.mailing.id }}
-        (<a href="{% url 'mailings:mailing_detail' attempt.mailing.id %}">подробнее</a>)
-      </td>
-      <td>{{ attempt.created_at }}</td>
-      <td>{{ attempt.get_status_display }}</td>
-      <td>{{ attempt.server_response|default:"(нет ответа)" }}</td>
-    </tr>
-  {% empty %}
-    <tr>
-      <td colspan="5">Попыток отправки пока не зафиксировано.</td>
-    </tr>
+  <tr>
+    <td>{{ attempt.id }}</td>
+    <td>{{ attempt.mailing.id }}</td>
+    <td>{{ attempt.get_status_display }}</td>
+    <td>{{ attempt.created_at }}</td>
+    <td>{{ attempt.server_response|default:"—" }}</td>
+  </tr>
   {% endfor %}
 </table>
 

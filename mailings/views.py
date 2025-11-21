@@ -172,8 +172,14 @@ class AttemptListView(LoginRequiredMixin, ListView):
     context_object_name = 'attempts'
 
     def get_queryset(self):
-        # показываем попытки только по рассылкам текущего пользователя
-        return Attempt.objects.filter(mailing__owner=self.request.user).select_related('mailing')
+        user = self.request.user
+
+        # Менеджеры видят все попытки
+        if user.is_superuser or user.groups.filter(name='Менеджеры').exists():
+            return Attempt.objects.all()
+
+        # Обычный пользователь только свои
+        return Attempt.objects.filter(mailing__owner=user)
 
 
 # Отправка рассылки
