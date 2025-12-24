@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Сообщение{% endblock %}
+
+{% block content %}
+<h1>Сообщение</h1>
+
+<p><strong>ID:</strong> {{ message.id }}</p>
+<p><strong>Тема:</strong> {{ message.subject }}</p>
+<p><strong>Текст:</strong><br>{{ message.body }}</p>
+
+<hr>
+
+<a class="btn btn-secondary" href="{% url 'mailings:message_list' %}">Назад к списку</a>
+
+{% if message.owner == user %}
+    <a class="btn btn-primary" href="{% url 'mailings:message_update' message.pk %}">
+        Изменить
+    </a>
+    <a class="btn btn-danger" href="{% url 'mailings:message_delete' message.pk %}">
+        Удалить
+    </a>
+{% endif %}
+
+{% endblock %}

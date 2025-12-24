@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Сервис рассылок{% endblock %}</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+{% load users_tags %}
+{% user_is_manager as is_manager %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+
+    <!-- Логотип / главная -->
+    <a class="navbar-brand" href="{% url 'home' %}">Рассылки</a>
+
+    <div class="collapse navbar-collapse">
+
+      <!-- ЛЕВАЯ ЧАСТЬ МЕНЮ (разделы сайта) -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'mailings:client_list' %}">Клиенты</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'mailings:message_list' %}">Сообщения</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'mailings:mailing_list' %}">Рассылки</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'mailings:attempt_list' %}">Попытки</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'mailings:reports' %}">Отчёты</a>
+          </li>
+
+          {% if is_manager %}
+            <li class="nav-item">
+              <a class="nav-link text-light" href="{% url 'users:user_list' %}">Пользователи</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <!-- ПРАВАЯ ЧАСТЬ МЕНЮ (авторизация) -->
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'users:profile' %}">Профиль</a>
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <form method="post"
+                  action="{% url 'users:logout' %}"
+                  class="m-0 p-0">
+              {% csrf_token %}
+              <button type="submit"
+                      class="btn btn-link nav-link p-0 m-0 text-light border-0 bg-transparent"
+                      style="text-decoration: none;">
+                Выход
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'users:login' %}">Вход</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'users:signup' %}">Регистрация</a>
+          </li>
+        {% endif %}
+      </ul>
+
+    </div>
+
+  </div>
+</nav>
+
+<div class="container mt-3">
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

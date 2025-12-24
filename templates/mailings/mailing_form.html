@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Форма рассылки{% endblock %}
+
+{% block content %}
+<h2>Форма рассылки</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        {{ form.start_datetime.label_tag }}
+        {{ form.start_datetime }}
+        <br>
+        <small class="text-muted">Формат: YYYY-MM-DD HH:MM (например: 2025-11-19 22:48)</small>
+    </p>
+
+    <p>
+        {{ form.end_datetime.label_tag }}
+        {{ form.end_datetime }}
+        <br>
+        <small class="text-muted">Формат: YYYY-MM-DD HH:MM</small>
+    </p>
+
+    <p>
+        {{ form.status.label_tag }}
+        {{ form.status }}
+    </p>
+
+    <p>
+        {{ form.message.label_tag }}
+        {{ form.message }}
+    </p>
+
+    <p>
+        {{ form.clients.label_tag }}
+        {{ form.clients }}
+    </p>
+
+    <button class="btn btn-success" type="submit">Сохранить</button>
+    <a class="btn btn-secondary" href="{% url 'mailings:mailing_list' %}">Отмена</a>
+</form>
+
+{% endblock %}

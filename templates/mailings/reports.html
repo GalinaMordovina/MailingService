@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Отчёты по рассылкам{% endblock %}
+
+{% block content %}
+<h1>Отчёты по рассылкам</h1>
+
+{% if is_manager_view %}
+  <p class="text-muted">
+    Вы просматриваете общую статистику по <strong>всем рассылкам сервиса</strong>.
+  </p>
+{% else %}
+  <p class="text-muted">
+    Статистика по <strong>вашим личным рассылкам</strong>.
+  </p>
+{% endif %}
+
+<div class="row mt-4">
+
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header">Рассылки</div>
+      <div class="card-body">
+        <p>Всего рассылок: <strong>{{ total_mailings }}</strong></p>
+        <p>Активных (запущенных): <strong>{{ active_mailings }}</strong></p>
+        <p>Завершённых: <strong>{{ finished_mailings }}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header">Попытки отправки</div>
+      <div class="card-body">
+        <p>Всего попыток: <strong>{{ total_attempts }}</strong></p>
+        <p>Успешных: <strong>{{ success_attempts }}</strong></p>
+        <p>Неуспешных: <strong>{{ failed_attempts }}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-header">Отправленные письма</div>
+      <div class="card-body">
+        <p>Всего отправлено писем: <strong>{{ total_sent_emails }}</strong></p>
+        <p class="text-muted mb-0">
+          Считаем каждую успешную попытку рассылки как одно отправленное письмо.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-secondary" href="{% url 'home' %}">На главную</a>
+</p>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load roles %}
+{% block title %}Клиент{% endblock %}
+
+{% block content %}
+<h2>{{ client.full_name }}</h2>
+<p><strong>Email:</strong> {{ client.email }}</p>
+<p><strong>Комментарий:</strong> {{ client.comment }}</p>
+
+{% if client.owner == user or user|is_manager %}
+    <a class="btn btn-warning" href="{% url 'mailings:client_update' client.id %}">Изменить</a>
+    <a class="btn btn-danger" href="{% url 'mailings:client_delete' client.id %}">Удалить</a>
+{% endif %}
+
+<a class="btn btn-secondary" href="{% url 'mailings:client_list' %}">Назад</a>
+{% endblock %}

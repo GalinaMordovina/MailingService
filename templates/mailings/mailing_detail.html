@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Рассылка{% endblock %}
+
+{% block content %}
+<h1>Рассылка #{{ mailing.id }}</h1>
+
+<p><strong>Начало:</strong> {{ mailing.start_datetime }}</p>
+<p><strong>Окончание:</strong> {{ mailing.end_datetime }}</p>
+<p><strong>Статус:</strong> {{ mailing.get_status_display }}</p>
+<p><strong>Активна:</strong> {{ mailing.is_active|yesno:"Да,Нет" }}</p>
+
+<p><strong>Сообщение:</strong> {{ mailing.message.subject }}</p>
+
+<p><strong>Получатели:</strong></p>
+<ul>
+  {% for client in mailing.clients.all %}
+    <li>{{ client.full_name }} ({{ client.email }})</li>
+  {% empty %}
+    <li>Нет получателей</li>
+  {% endfor %}
+</ul>
+
+<hr>
+
+{% if mailing.owner == user %}
+    {% if mailing.is_active %}
+        <!-- Кнопка отправки рассылки доступна только владельцу
+             и только если рассылка активна -->
+        <form method="post" action="{% url 'mailings:mailing_send' mailing.id %}">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">
+            Отправить рассылку сейчас
+          </button>
+        </form>
+    {% else %}
+        <p class="text-muted">
+            Рассылка отключена. Чтобы отправить письма, включите её в настройках.
+        </p>
+    {% endif %}
+
+    <br>
+
+    <a class="btn btn-warning" href="{% url 'mailings:mailing_update' mailing.id %}">
+        Изменить
+    </a>
+    <a class="btn btn-danger" href="{% url 'mailings:mailing_delete' mailing.id %}">
+        Удалить
+    </a>
+{% endif %}
+
+<a class="btn btn-secondary mt-2" href="{% url 'mailings:mailing_list' %}">
+    Назад к списку
+</a>
+
+<hr>
+
+<h3>Попытки отправки</h3>
+<ul>
+  {% for attempt in mailing.attempts.all %}
+    <li>
+      {{ attempt.created_at }} —
+      {{ attempt.get_status_display }} —
+      {{ attempt.server_response|default:"(нет ответа)" }}
+    </li>
+  {% empty %}
+    <li>Попыток пока не было.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
